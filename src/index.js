@@ -8,6 +8,7 @@ const main = document.querySelector(".main");
 const ulTodo = document.querySelector(".todo-list");
 const footer = document.querySelector(".footer");
 const input = document.querySelector(".new-todo");
+const todoCount = document.querySelector(".todo-count");
 
 window.addEventListener("load", function () {
   input.autofocus = true;
@@ -43,8 +44,20 @@ function drawTodo() {
   TODO.forEach((item) => {
     ulTodo.appendChild(createLi(item));
   });
+  countTodos();
 }
-
+function countTodos() {
+  const pending = TODO.filter((item) => {
+    return item.completed === false;
+  });
+  console.log(pending);
+  const numberPending = pending.length;
+  const strong = document.createElement("strong");
+  const palabra = numberPending == 1 ? "item" : "items";
+  strong.innerHTML = numberPending + " " + palabra;
+  todoCount.innerHTML = "";
+  todoCount.appendChild(strong);
+}
 function createLi(todo) {
   const li = document.createElement("li");
   if (todo.completed) li.classList.add("completed");
@@ -57,12 +70,13 @@ function createLi(todo) {
     if (!input.checked) {
       todo.completed = false;
       li.classList.remove("completed");
-      input.checked = false;
+      input.removeAttribute("checked", "checked");
     } else {
       todo.completed = true;
       li.classList.add("completed");
-      input.checked = true;
+      input.setAttribute("checked", "checked");
     }
+    countTodos();
   });
   //input.checked = todo.checked;
   if (todo.completed) input.setAttribute("checked", "checked");
