@@ -58,15 +58,14 @@ function createLi(todo) {
       todo.completed = false;
       li.classList.remove("completed");
       input.checked = false;
-      input.checked = false;
     } else {
       todo.completed = true;
       li.classList.add("completed");
       input.checked = true;
-      input.checked = true;
     }
   });
-  input.checked = todo.checked;
+  //input.checked = todo.checked;
+  if (todo.completed) input.setAttribute("checked", "checked");
   const label = document.createElement("label");
   label.innerText = todo.title;
 
