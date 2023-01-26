@@ -18,6 +18,9 @@ const input = document.querySelector(".new-todo");
 const todoCount = document.querySelector(".todo-count");
 const btnClearTodo = document.querySelector(".clear-completed");
 
+window.addEventListener('DOMContentLoaded',drawTodo,false);
+window.addEventListener('hashchange',drawTodo,false);
+
 window.addEventListener("load", function () {
   input.autofocus = true;
 });
@@ -33,6 +36,7 @@ function findIndexTODO(id) {
     return item.id == id;
   });
 }
+
 function addNewTodo() {
   let newTodo = input.value;
   newTodo = newTodo.trim();
@@ -49,8 +53,29 @@ function addNewTodo() {
   drawTodo();
 }
 function drawTodo() {
+  let TODOAnalisis;
+  if (location.hash.startsWith("#/pending")) {
+    console.log("pending");
+    TODOAnalisis = TODO.filter((item) => {
+      return item.completed === false;
+    });
+  } else if (location.hash.startsWith("#/completed")) {
+    console.log("completed");
+    TODOAnalisis = TODO.filter((item) => {
+      return item.completed === true;
+    });
+  } else if (
+    location.hash.startsWith("#/all") ||
+    location.hash.startsWith("#/")
+  ) {
+    console.log("all");
+    TODOAnalisis = TODO;
+  } else {
+    TODOAnalisis = TODO;
+  }
+
   ulTodo.innerHTML = "";
-  TODO.forEach((item) => {
+  TODOAnalisis.forEach((item) => {
     ulTodo.appendChild(createLi(item));
   });
   countTodos();
