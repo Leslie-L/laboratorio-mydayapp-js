@@ -44,6 +44,7 @@ function drawTodo() {
     ulTodo.appendChild(createLi(item));
   });
 }
+
 function createLi(todo) {
   const li = document.createElement("li");
   if (todo.completed) li.classList.add("completed");
@@ -68,6 +69,7 @@ function createLi(todo) {
   input.checked = todo.checked;
   const label = document.createElement("label");
   label.innerText = todo.title;
+
   const btn = document.createElement("button");
   btn.classList.add("destroy");
   btn.addEventListener("click", () => {
@@ -82,6 +84,27 @@ function createLi(todo) {
   const inputEdit = document.createElement("input");
   inputEdit.classList.add("edit");
   inputEdit.value = todo.title;
+  label.addEventListener("dblclick", () => {
+    li.classList.add("editing");
+  });
+  inputEdit.addEventListener("keydown", (e) => {
+    console.log(e.key);
+    if (e.key === "Enter") {
+      let newTodo = inputEdit.value;
+      newTodo = newTodo.trim();
+      if (newTodo.length > 0) {
+        todo.title = newTodo;
+        todo.completed = false;
+        label.innerText = newTodo;
+        li.classList.remove("completed");
+        input.checked = false;
+        inputEdit.classList.add(".focus()");
+        li.classList.remove("editing");
+      }
+    } else if (e.key === "Escape") {
+      li.classList.remove("editing");
+    }
+  });
   li.appendChild(div);
   li.appendChild(inputEdit);
   return li;
