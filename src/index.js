@@ -17,9 +17,12 @@ const footer = document.querySelector(".footer");
 const input = document.querySelector(".new-todo");
 const todoCount = document.querySelector(".todo-count");
 const btnClearTodo = document.querySelector(".clear-completed");
+const btnAll = document.querySelector("#all");
+const btnPending = document.querySelector("#pending");
+const btnCompleted = document.querySelector("#completed");
 
-window.addEventListener('DOMContentLoaded',drawTodo,false);
-window.addEventListener('hashchange',drawTodo,false);
+window.addEventListener("DOMContentLoaded", drawTodo, false);
+window.addEventListener("hashchange", drawTodo, false);
 
 window.addEventListener("load", function () {
   input.autofocus = true;
@@ -59,17 +62,26 @@ function drawTodo() {
     TODOAnalisis = TODO.filter((item) => {
       return item.completed === false;
     });
+    btnPending.classList.add("selected");
+    btnAll.classList.remove("selected");
+    btnCompleted.classList.remove("selected");
   } else if (location.hash.startsWith("#/completed")) {
     console.log("completed");
     TODOAnalisis = TODO.filter((item) => {
       return item.completed === true;
     });
+    btnPending.classList.remove("selected");
+    btnAll.classList.remove("selected");
+    btnCompleted.classList.add("selected");
   } else if (
     location.hash.startsWith("#/all") ||
     location.hash.startsWith("#/")
   ) {
     console.log("all");
     TODOAnalisis = TODO;
+    btnPending.classList.remove("selected");
+    btnAll.classList.add("selected");
+    btnCompleted.classList.remove("selected");
   } else {
     TODOAnalisis = TODO;
   }
@@ -79,6 +91,7 @@ function drawTodo() {
     ulTodo.appendChild(createLi(item));
   });
   countTodos();
+  controlCantidadTodos();
 }
 function countTodos() {
   const pending = TODO.filter((item) => {
@@ -87,7 +100,7 @@ function countTodos() {
   console.log(pending);
   const numberPending = pending.length;
   const strong = document.createElement("strong");
-  const palabra = numberPending == 1 ? "item" : "items";
+  const palabra = numberPending == 1 ? "item left" : "items left";
   strong.innerHTML = numberPending + " " + palabra;
   todoCount.innerHTML = "";
   todoCount.appendChild(strong);
@@ -119,6 +132,7 @@ function createLi(todo) {
     }
     localStorage.setItem("mydayapp-js", JSON.stringify(TODO));
     countTodos();
+    controlCantidadTodos();
   });
   //input.checked = todo.checked;
   if (todo.completed) input.setAttribute("checked", "checked");
@@ -174,6 +188,17 @@ function controlCantidadTodos() {
   } else {
     main.classList.remove("hidden");
     footer.classList.remove("hidden");
+  }
+  const completed = TODO.filter((item) => {
+    return item.completed == true;
+  });
+  console.log("completed", completed);
+  if (completed.length === 0) {
+    btnClearTodo.classList.add("hidden");
+  } else {
+    if (btnClearTodo.classList.contains("hidden")) {
+      btnClearTodo.classList.remove("hidden");
+    }
   }
 }
 controlCantidadTodos();
