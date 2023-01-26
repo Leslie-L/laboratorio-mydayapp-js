@@ -1,5 +1,99 @@
 import "./css/base.css";
 
-import { sayHello } from "./js/utils";
+import hat from "hat";
 
-console.log(sayHello("Hello"));
+const TODO = [];
+
+const main = document.querySelector(".main");
+const ulTodo = document.querySelector(".todo-list");
+const footer = document.querySelector(".footer");
+const input = document.querySelector(".new-todo");
+
+window.addEventListener("load", function () {
+  input.autofocus = true;
+});
+input.addEventListener("keypress", function (event) {
+  if (event.key === "Enter") {
+    addNewTodo();
+    input.value = "";
+  }
+});
+
+function findIndexTODO(id) {
+  return TODO.findIndex((item) => {
+    return item.id == id;
+  });
+}
+function addNewTodo() {
+  let newTodo = input.value;
+  newTodo = newTodo.trim();
+  if (newTodo.length > 0) {
+    const newId = hat();
+    TODO.push({
+      id: newId,
+      title: newTodo,
+      completed: false,
+    });
+  }
+  controlCantidadTodos();
+  drawTodo();
+}
+function drawTodo() {
+  ulTodo.innerHTML = "";
+  TODO.forEach((item) => {
+    ulTodo.appendChild(createLi(item));
+  });
+}
+function createLi(todo) {
+  const li = document.createElement("li");
+  if (todo.completed) li.classList.add("completed");
+  const div = document.createElement("div");
+  div.classList.add("view");
+  const input = document.createElement("input");
+  input.classList.add("toggle");
+  input.setAttribute("type", "checkbox");
+  input.addEventListener("change", () => {
+    if (!input.checked) {
+      todo.completed = false;
+      li.classList.remove("completed");
+      input.checked = false;
+      input.checked = false;
+    } else {
+      todo.completed = true;
+      li.classList.add("completed");
+      input.checked = true;
+      input.checked = true;
+    }
+  });
+  input.checked = todo.checked;
+  const label = document.createElement("label");
+  label.innerText = todo.title;
+  const btn = document.createElement("button");
+  btn.classList.add("destroy");
+  btn.addEventListener("click", () => {
+    const indexDeleted = findIndexTODO(todo.id);
+    TODO.splice(indexDeleted, 1);
+    drawTodo();
+    controlCantidadTodos();
+  });
+  div.appendChild(input);
+  div.appendChild(label);
+  div.appendChild(btn);
+  const inputEdit = document.createElement("input");
+  inputEdit.classList.add("edit");
+  inputEdit.value = todo.title;
+  li.appendChild(div);
+  li.appendChild(inputEdit);
+  return li;
+}
+
+function controlCantidadTodos() {
+  if (TODO.length === 0) {
+    main.classList.add("hidden");
+    footer.classList.add("hidden");
+  } else {
+    main.classList.remove("hidden");
+    footer.classList.remove("hidden");
+  }
+}
+controlCantidadTodos();
