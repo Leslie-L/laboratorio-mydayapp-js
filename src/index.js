@@ -2,13 +2,14 @@ import "./css/base.css";
 
 import hat from "hat";
 
-const TODO = [];
+let TODO = [];
 
 const main = document.querySelector(".main");
 const ulTodo = document.querySelector(".todo-list");
 const footer = document.querySelector(".footer");
 const input = document.querySelector(".new-todo");
 const todoCount = document.querySelector(".todo-count");
+const btnClearTodo = document.querySelector(".clear-completed");
 
 window.addEventListener("load", function () {
   input.autofocus = true;
@@ -19,7 +20,7 @@ input.addEventListener("keypress", function (event) {
     input.value = "";
   }
 });
-
+btnClearTodo.addEventListener("click", clearCompleted);
 function findIndexTODO(id) {
   return TODO.findIndex((item) => {
     return item.id == id;
@@ -57,6 +58,12 @@ function countTodos() {
   strong.innerHTML = numberPending + " " + palabra;
   todoCount.innerHTML = "";
   todoCount.appendChild(strong);
+}
+function clearCompleted() {
+  TODO = TODO.filter((item) => {
+    return item.completed === false;
+  });
+  drawTodo();
 }
 function createLi(todo) {
   const li = document.createElement("li");
