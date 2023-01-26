@@ -2,7 +2,14 @@ import "./css/base.css";
 
 import hat from "hat";
 
-let TODO = [];
+let TODO;
+
+TODO = localStorage.getItem("mydayapp-js");
+if (TODO) {
+  TODO = JSON.parse(TODO);
+} else {
+  TODO = [];
+}
 
 const main = document.querySelector(".main");
 const ulTodo = document.querySelector(".todo-list");
@@ -36,6 +43,7 @@ function addNewTodo() {
       title: newTodo,
       completed: false,
     });
+    localStorage.setItem('mydayapp-js',JSON.stringify(TODO));
   }
   controlCantidadTodos();
   drawTodo();
@@ -63,6 +71,7 @@ function clearCompleted() {
   TODO = TODO.filter((item) => {
     return item.completed === false;
   });
+  localStorage.setItem("mydayapp-js", JSON.stringify(TODO));
   drawTodo();
 }
 function createLi(todo) {
@@ -83,6 +92,7 @@ function createLi(todo) {
       li.classList.add("completed");
       input.setAttribute("checked", "checked");
     }
+    localStorage.setItem("mydayapp-js", JSON.stringify(TODO));
     countTodos();
   });
   //input.checked = todo.checked;
@@ -95,6 +105,7 @@ function createLi(todo) {
   btn.addEventListener("click", () => {
     const indexDeleted = findIndexTODO(todo.id);
     TODO.splice(indexDeleted, 1);
+    localStorage.setItem("mydayapp-js", JSON.stringify(TODO));
     drawTodo();
     controlCantidadTodos();
   });
@@ -120,6 +131,7 @@ function createLi(todo) {
         input.checked = false;
         inputEdit.classList.add(".focus()");
         li.classList.remove("editing");
+        localStorage.setItem("mydayapp-js", JSON.stringify(TODO));
       }
     } else if (e.key === "Escape") {
       li.classList.remove("editing");
@@ -140,3 +152,4 @@ function controlCantidadTodos() {
   }
 }
 controlCantidadTodos();
+drawTodo();
